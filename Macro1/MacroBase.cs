@@ -28,7 +28,7 @@ namespace Macro1
             }
         }
 
-        public void ExpandMacros(string input)
+        public string ExpandMacros(string input)
         {
             string pattern = @"\$\$\(([A-Z]+)\)";
             var matches = Regex.Matches(input, pattern);
@@ -40,17 +40,28 @@ namespace Macro1
                 outputString += input.Substring(currentIndex, match.Index - currentIndex);
                 currentIndex = match.Index + match.Length;
 
+                bool matchfound = false;
                 if (match.Groups.Count > 1)
                 {
                     var macroname = match.Groups[1].Value;
                     PropertyInfo propertyInfo;
                     if (macroToPropertyMapping.TryGetValue(macroname, out propertyInfo))
                     {
-
+                        matchfound = true;
+                        var s = propertyInfo.GetValue(null).ToString();
+                        outputString += s;
                     }
                 }
+
+                if (!matchfound)
+                {
+                    outputString += input.Substring(match.Index, match.Length);
+                }
             }
-            var lastIndex = matches[matches.Count - 1].Index + matches
+            matches.Cast<Match>().Last();
+            var lastIndex = matches[matches.Count - 1].Index + matches[matches.Count - 1].Length;
+            outputString += input.Substring(lastIndex);
+            return outputString;
         }
     }
 }

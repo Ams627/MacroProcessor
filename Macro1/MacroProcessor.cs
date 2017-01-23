@@ -11,7 +11,7 @@ namespace Macro1
     {
         [Macro("WONK")]
         
-        public static int Wonk { get; set; } = 0;
+        public static int Wonk { get; set; } = 13579;
 
         [Macro("WINK")]
         public static string Bonk { get; set; } = "Bonk";
